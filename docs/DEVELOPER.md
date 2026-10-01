@@ -36,6 +36,8 @@ native/foreground-guide  (native/ForegroundGuide.swift) Apple Vision helper used
 | `preview_cache.py`, `preview_storage.py` | Persistent preview cache (2 GB cap) and per-session preview files |
 | `progress.py` | Measured elapsed time and estimated per-photo progress |
 | `seed/learning-history.sqlite3` | Starting learning history, installed by `setup.sh` |
+| `setup.sh`, `build_app.sh` | One-time install (Python environment, packages, seed history, app build) and app rebuild |
+| `Set up Brick Studio.command` | Double-click wrapper for `setup.sh`: checks for Python 3.13 and the developer tools, runs setup, opens the app |
 
 ## Processing pipeline
 

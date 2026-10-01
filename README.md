@@ -9,22 +9,39 @@ Everything runs on the Mac. Photos are never uploaded; the only network use is t
 ## Requirements
 
 - A Mac with Apple Silicon (M1 or later) and macOS 14 or later
-- Python 3.13 (from [python.org](https://www.python.org/downloads/) or `brew install python@3.13`)
-- Xcode Command Line Tools: `xcode-select --install`
+- Python 3.13: the macOS installer from [python.org](https://www.python.org/downloads/macos/), or `brew install python@3.13`
+- Apple's command-line developer tools (the setup offers to install them if they are missing)
 - About 3 GB of disk for the Python environment and model, plus space for exports and caches
 - Internet during setup and for the first cutout; offline afterwards
 
 ## Setup
 
+### Without Terminal (recommended)
+
+1. On the repository page, click **Code → Download ZIP** and unzip it. Move the folder wherever the app should live, for example into Documents.
+2. Double-click **Set up Brick Studio** in the folder.
+   - macOS blocks it the first time, because it was downloaded and is not signed by a registered developer. Right-click it, choose **Open**, then **Open** again. On newer macOS, if there is no Open button, go to **System Settings → Privacy & Security** and click **Open Anyway** next to the message about it.
+   - If Python 3.13 is missing, the setup opens its download page. Install it, then double-click **Set up Brick Studio** again.
+   - If Apple's developer tools are missing, an install window opens. Click **Install**, wait for it to finish, then double-click **Set up Brick Studio** again.
+3. Leave the window open while it works. Setup takes a few minutes and downloads about 1.5 GB. When it finishes, Brick Studio opens.
+
+From then on, open **Brick Studio.app** in the folder like any other app. Keep the app inside this folder: it runs the Python engine that sits next to it. You can add it to the Dock. To update an existing setup, for example after downloading a newer version into the same folder, double-click **Set up Brick Studio** again.
+
+The first cutout downloads the segmentation model (about 430 MB) and is slow; later ones are quick.
+
+### With Terminal
+
 ```bash
-git clone <repository-url> brick-studio
+git clone https://github.com/lukasvale/brick-studio.git
 cd brick-studio
 ./setup.sh
 ```
 
-`setup.sh` creates a Python environment in `.venv`, installs the pinned packages, installs the starting learning history and builds `Brick Studio.app` in the same folder. It takes a few minutes. For a smaller install without the GPU engine, run `./setup.sh --cpu-only` (cutouts are then roughly ten times slower).
+`setup.sh` creates a Python environment in `.venv`, installs the pinned packages, installs the starting learning history and builds `Brick Studio.app` in the same folder. Set `PYTHON=/path/to/python3.13` if Python 3.13 is not on your PATH. For a smaller install without the GPU engine, run `./setup.sh --cpu-only` (cutouts are then roughly ten times slower).
 
-Open **Brick Studio.app**. Keep it inside this folder: the app runs the Python engine that sits next to it. The first cutout downloads the segmentation model (about 430 MB) and is slow; later ones are quick.
+A cloned copy is not marked as downloaded, so macOS does not ask for permission to run it.
+
+### After changing code
 
 After changing any Swift code, run `./build_app.sh` and reopen the app. Python changes take effect when the app is reopened.
 
