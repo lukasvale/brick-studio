@@ -1,0 +1,20 @@
+Brick Studio Licence
+
+Copyright (c) 2026 lukasvale. All rights reserved, except as granted below.
+
+1. Use and modification. You may use, copy and modify this software, including
+   for your own business, on as many of your own computers as you need.
+
+2. No resale or redistribution. You may not sell, rent, lease or sublicense this
+   software or any modified version of it, include it in a product you sell, or
+   offer it as a paid service. You may not give or publish it, or a modified
+   version, to anyone outside your organisation without written permission from
+   the copyright holder.
+
+3. Third-party components. The libraries and models that setup.sh installs are
+   covered by their own licences (listed in docs/DEVELOPER.md). This licence
+   does not change those terms.
+
+4. No warranty. The software is provided "as is", without warranty of any kind.
+   The copyright holder is not liable for any claim, damages or other liability
+   arising from the software or its use.

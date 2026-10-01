@@ -85,3 +85,7 @@ Source photos are never modified. Deleting `work/` resets the queue, caches and 
 - Sharpening cannot restore detail missing from a soft source photo.
 
 For how the code is organised, see [docs/DEVELOPER.md](docs/DEVELOPER.md).
+
+## Licence
+
+You may use and modify Brick Studio, including for your own business, but not sell, rent, sublicense or redistribute it. See [LICENSE](LICENSE). The libraries and models it installs keep their own licences.
