@@ -1,0 +1,35 @@
+attrs==26.1.0
+certifi==2026.7.22
+charset-normalizer==3.5.1
+flatbuffers==25.12.19
+idna==3.19
+ImageIO==2.37.4
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+lazy-loader==0.5
+llvmlite==0.49.0
+networkx==3.6.1
+numba==0.67.0
+numpy==2.5.3
+onnxruntime==1.29.0
+opencv-python-headless==5.0.0.93
+packaging==26.3
+pillow==12.3.0
+platformdirs==4.11.8
+pooch==1.9.0
+protobuf==7.36.1
+PyMatting==1.1.16
+rawpy==0.27.1
+referencing==0.37.0
+rembg==2.0.84
+requests==2.34.2
+rpds-py==2026.6.3
+scikit-image==0.26.0
+scipy==1.18.1
+tifffile==2026.9.9
+tqdm==4.70.0
+urllib3==2.7.0
+
+# Optional Metal backend (pip install -r requirements-mps.txt):
+# torch, torchvision, transformers, huggingface_hub, einops, kornia, timm
+# Adds ~0.8–1.2 GB. Select "Metal · faster" in Brick Studio once installed.

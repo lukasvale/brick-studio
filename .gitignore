@@ -1,0 +1,18 @@
+# Python environment and caches
+.venv/
+__pycache__/
+*.pyc
+
+# Built artefacts (rebuilt by build_app.sh)
+Brick Studio.app/
+native/foreground-guide
+
+# Runtime data: photos, masks, previews, queue state, learning history, exports
+work/
+output/
+
+.DS_Store
+
+# SQLite side files
+*.sqlite3-shm
+*.sqlite3-wal
