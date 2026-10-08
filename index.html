@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="How to set up and use Brick Studio: every screen, recipe control, export option and fix.">
+<title>Brick Studio Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<style>
+/* Layout: sticky contents rail on the left, one reading column; screenshots are the
+   hero of each section, with numbered markers tied to a legend beside them. */
+:root{
+  --bg: oklch(0.985 0.004 275);
+  --surface: oklch(0.955 0.008 275);
+  --line: oklch(0.88 0.012 275);
+  --ink: oklch(0.22 0.02 275);
+  --muted: oklch(0.45 0.02 275);
+  --accent: oklch(0.56 0.19 275);
+  --accent-ink: oklch(0.99 0 0);
+  --accent-soft: oklch(0.93 0.04 275);
+  --warn: oklch(0.62 0.15 80);
+  --warn-soft: oklch(0.95 0.05 90);
+  --ok: oklch(0.58 0.14 150);
+  --app: oklch(0.2 0.005 275);
+  --code-bg: oklch(0.95 0.008 275);
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg: oklch(0.17 0.008 275); --surface: oklch(0.215 0.01 275); --line: oklch(0.32 0.014 275);
+  --ink: oklch(0.94 0.008 275); --muted: oklch(0.72 0.015 275);
+  --accent: oklch(0.72 0.14 275); --accent-ink: oklch(0.16 0.02 275); --accent-soft: oklch(0.3 0.06 275);
+  --warn: oklch(0.82 0.14 90); --warn-soft: oklch(0.3 0.05 90); --ok: oklch(0.75 0.14 150);
+  --app: oklch(0.13 0.005 275); --code-bg: oklch(0.21 0.01 275); color-scheme: dark }}
+:root[data-theme="dark"]{
+  --bg: oklch(0.17 0.008 275); --surface: oklch(0.215 0.01 275); --line: oklch(0.32 0.014 275);
+  --ink: oklch(0.94 0.008 275); --muted: oklch(0.72 0.015 275);
+  --accent: oklch(0.72 0.14 275); --accent-ink: oklch(0.16 0.02 275); --accent-soft: oklch(0.3 0.06 275);
+  --warn: oklch(0.82 0.14 90); --warn-soft: oklch(0.3 0.05 90); --ok: oklch(0.75 0.14 150);
+  --app: oklch(0.13 0.005 275); --code-bg: oklch(0.21 0.01 275); color-scheme: dark }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:24px;padding-block:0 96px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0;padding-inline:16px}}
+
+/* contents rail */
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;padding-top:40px;font-size:14px}
+.toc .brand{display:flex;align-items:center;gap:10px;font-weight:700;margin-bottom:20px}
+.toc .brand i{width:22px;height:22px;border-radius:5px;background:var(--accent);display:grid;place-items:center}
+.toc .brand i::before{content:"";width:12px;height:6px;border-radius:2px;background:var(--accent-ink);box-shadow:0 -4px 0 -1px var(--accent-ink)}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.toc a{display:block;padding:5px 10px;border-radius:6px;color:var(--muted);text-decoration:none}
+.toc a:hover{color:var(--ink);background:var(--surface)}
+.toc a.on{color:var(--ink);background:var(--accent-soft);font-weight:500}
+@media (max-width:900px){
+  .toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+  .toc .brand{display:none}
+  .toc ol{flex-direction:row;overflow-x:auto;gap:4px;scrollbar-width:none}
+  .toc a{white-space:nowrap;border:1px solid var(--line)}
+}
+
+main{min-width:0;padding-top:40px}
+header.intro{max-width:70ch;padding-bottom:32px;border-bottom:1px solid var(--line);margin-bottom:8px}
+h1{font-size:2.5rem;line-height:1.1;letter-spacing:-0.02em;margin:0 0 14px;text-wrap:balance}
+.lede{font-size:1.15rem;color:var(--muted);margin:0;text-wrap:pretty}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:20px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+section{padding-top:56px}
+h2{font-size:1.65rem;line-height:1.2;letter-spacing:-0.01em;margin:0 0 10px;text-wrap:balance}
+h3{font-size:1.15rem;margin:32px 0 8px;text-wrap:balance}
+p,li{max-width:70ch;text-wrap:pretty}
+p{margin:0 0 14px}
+.sub{color:var(--muted);margin-bottom:22px}
+a{color:var(--accent)}
+code,kbd,.mono{font-family:var(--mono);font-size:.88em}
+code{background:var(--code-bg);padding:1px 5px;border-radius:4px}
+kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 6px;background:var(--surface);font-size:.82em;line-height:1.6}
+.ui{font-weight:600;white-space:nowrap}
+
+/* workflow */
+.steps{list-style:none;padding:0;margin:20px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;max-width:none}
+.steps li{background:var(--surface);border-radius:var(--r);padding:16px 16px 18px;max-width:none;counter-increment:s}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:600 13px var(--mono);margin-bottom:10px}
+.steps b{display:block;margin-bottom:4px}
+.steps span{font-size:14px;color:var(--muted);line-height:1.5;display:block}
+
+/* annotated screenshot */
+.annot{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start;margin-top:18px}
+@media (max-width:1100px){.annot{grid-template-columns:minmax(0,1fr)}}
+.shot{position:relative;margin:0;border-radius:var(--r);overflow:hidden;background:var(--app);border:1px solid var(--line);line-height:0}
+.shot img{width:100%;height:auto;display:block}
+.pin{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:var(--accent);color:#fff;font:600 11px/20px var(--mono);text-align:center;cursor:pointer;padding:0;box-shadow:0 1px 4px rgb(0 0 0 / .45);transition:transform .18s cubic-bezier(.22,1,.36,1),background .18s}
+.pin:hover,.pin.on{transform:translate(-50%,-50%) scale(1.25);background:oklch(0.6 0.2 30)}
+.pin:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
+@media (max-width:600px){.pin{width:18px;height:18px;font-size:9px;line-height:14px;border-width:1.5px}}
+.legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:none}
+.legend li{max-width:none}
+.legend button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:24px 1fr;gap:10px;width:100%;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px;line-height:1.45}
+.legend button:hover{background:var(--surface)}
+.legend button.on{background:var(--accent-soft)}
+.legend button:focus-visible{outline:2px solid var(--accent)}
+.legend .n{width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:600 11px/22px var(--mono);text-align:center;margin-top:1px}
+.legend b{display:block;font-weight:600}
+.legend span{color:var(--muted)}
+.legend .more{display:none;color:var(--ink);margin-top:4px}
+.legend button.on .more{display:block}
+.caption{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
+
+/* segmented switch for image comparisons */
+.switch{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:3px;gap:2px;margin:6px 0 12px}
+.switch button{all:unset;cursor:pointer;padding:5px 14px;border-radius:6px;font-size:14px;color:var(--muted)}
+.switch button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:500}
+.switch button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.swapper{max-width:900px}
+
+/* two-column figure + text */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;margin-top:12px}
+.split.narrow-img{grid-template-columns:240px minmax(0,1fr)}
+@media (max-width:760px){.split,.split.narrow-img{grid-template-columns:minmax(0,1fr)}.split.narrow-img .shot{max-width:260px}}
+
+/* tables */
+.tablewrap{overflow-x:auto;margin-top:12px;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--surface)}
+tr:last-child td{border-bottom:0}
+td.mono,td .mono{white-space:nowrap;font-variant-numeric:tabular-nums}
+td.group{background:var(--surface);font-weight:600;font-size:13px}
+tr[hidden]{display:none}
+.filter{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.filter input{font:inherit;font-size:15px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:min(320px,100%)}
+.filter input::placeholder{color:var(--muted)}
+.filter input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.filter small{color:var(--muted)}
+
+/* icon legend */
+.icons{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:4px 24px;margin-top:10px;padding:0;list-style:none}
+.icons li{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:start;padding:7px 0;font-size:14px;line-height:1.45;max-width:none}
+.ico{width:24px;height:24px;display:grid;place-items:center;color:var(--muted)}
+.ico svg{width:18px;height:18px}
+
+.note{background:var(--warn-soft);border-radius:var(--r);padding:12px 16px;font-size:14px;max-width:70ch;margin:16px 0}
+.note b{color:var(--ink)}
+pre{background:var(--code-bg);border-radius:var(--r);padding:14px 16px;overflow-x:auto;font:13px/1.65 var(--mono);margin:12px 0;max-width:70ch}
+details{border-bottom:1px solid var(--line);max-width:75ch}
+details:first-of-type{border-top:1px solid var(--line)}
+summary{cursor:pointer;padding:13px 2px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:400 20px/1 var(--mono);color:var(--muted)}
+details[open] summary::after{content:"−"}
+summary:focus-visible{outline:2px solid var(--accent);border-radius:4px}
+details>div{padding:0 2px 14px;color:var(--ink)}
+details p:last-child{margin-bottom:0}
+ul.tight{padding-left:20px;margin:8px 0 14px}
+ul.tight li{margin:4px 0}
+footer{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="brand"><i aria-hidden="true"></i>Brick Studio</div>
+  <ol>
+    <li><a href="#start">Get started</a></li>
+    <li><a href="#workflow">The workflow</a></li>
+    <li><a href="#folders">Folders screen</a></li>
+    <li><a href="#queue">Folder list</a></li>
+    <li><a href="#photos">Photo view</a></li>
+    <li><a href="#recipe">Recipe panel</a></li>
+    <li><a href="#export">Exporting</a></li>
+    <li><a href="#suggest">Suggested settings</a></li>
+    <li><a href="#keys">Shortcuts</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+    <li><a href="#files">Where files live</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="intro">
+  <h1>Brick Studio user guide</h1>
+  <p class="lede">Brick Studio turns RAW turntable photos of LEGO sets into catalogue images: white background, real contact shadow, corrected colour, and the same framing across all 36 angles. Each export writes a white JPEG and a transparent PNG per photo.</p>
+  <div class="meta"><span>Version <b>0.13.2</b></span><span>macOS 14+, Apple Silicon</span><span>Runs offline, photos never leave the Mac</span></div>
+</header>
+
+<section id="start">
+  <h2>Get started</h2>
+  <p class="sub">One-time setup takes a few minutes and downloads about 1.5 GB.</p>
+  <h3>You need</h3>
+  <ul class="tight">
+    <li>A Mac with Apple Silicon (M1 or later) on macOS 14 or later</li>
+    <li>Python 3.13 from <a href="https://www.python.org/downloads/macos/" target="_blank" rel="noopener">python.org</a> (or <code>brew install python@3.13</code>)</li>
+    <li>About 3 GB free for the engine and model, plus room for exports</li>
+    <li>Internet during setup and the first cutout; offline after that</li>
+  </ul>
+  <h3>Install without Terminal</h3>
+  <ol class="tight">
+    <li>On the <a href="https://github.com/lukasvale/brick-studio" target="_blank" rel="noopener">repository page</a>, choose <span class="ui">Code → Download ZIP</span>, unzip it and move the folder where the app should live, for example Documents.</li>
+    <li>Double-click <span class="ui">Set up Brick Studio</span>. macOS blocks it the first time: right-click it, choose <span class="ui">Open</span>, then <span class="ui">Open</span> again. On newer macOS, go to <span class="ui">System Settings → Privacy &amp; Security</span> and click <span class="ui">Open Anyway</span>.</li>
+    <li>If Python 3.13 or Apple's developer tools are missing, setup opens the installer. Install it, then double-click <span class="ui">Set up Brick Studio</span> again.</li>
+    <li>Leave the window open until Brick Studio opens by itself.</li>
+  </ol>
+  <p>From then on, open <span class="ui">Brick Studio.app</span> from that folder (you can add it to the Dock). Keep the app inside the folder, because it runs the engine that sits next to it. To update, download the newer version into the same folder and run <span class="ui">Set up Brick Studio</span> again.</p>
+  <div class="note"><b>The first cutout is slow.</b> It downloads the segmentation model (about 430 MB) once. Every cutout after that is quick, and cutouts are cached so re-exports skip detection entirely.</div>
+  <h3>Install with Terminal</h3>
+<pre>git clone https://github.com/lukasvale/brick-studio.git
+cd brick-studio
+./setup.sh            # add --cpu-only for a smaller install, ~10× slower cutouts</pre>
+</section>
+
+<section id="workflow">
+  <h2>The workflow</h2>
+  <p class="sub">A typical session, from RAW folders to finished catalogue images.</p>
+  <ol class="steps">
+    <li><b>Add folders</b><span>Drag product folders onto the window, or press <kbd>⌘O</kbd>. One folder per product, holding one rotation.</span></li>
+    <li><b>Review</b><span>Click a folder, step through angles with <kbd>←</kbd> <kbd>→</kbd>, hover for the magnifier.</span></li>
+    <li><b>Adjust</b><span>Tune Tone, Detail, Shadow, Output and Cutout. Edits apply to every selected folder.</span></li>
+    <li><b>Fine-tune photos</b><span>Optional. <span class="ui">All photos</span> lets you change single angles or mark a packaging shot.</span></li>
+    <li><b>Export</b><span>Pick a destination, press <span class="ui">Process</span>. Pause and resume any time.</span></li>
+  </ol>
+  <p style="margin-top:18px">Accepted files: RAW (DNG, CR2/CR3, NEF, ARW, RAF, RW2, ORF, PEF), JPEG, PNG and TIFF. A parent folder full of product subfolders also works. Source photos are never modified.</p>
+</section>
+
+<section id="folders">
+  <h2>Folders screen</h2>
+  <p class="sub">Where you build the queue, review each product and set its recipe. Click a number, or hover the list, to see what each part does.</p>
+  <div class="annot" data-annot="folders">
+    <figure class="shot"><img src="shots/overview-full.jpg" width="1415" height="840" alt="Brick Studio Folders screen: folder list on the left, a LEGO Minecraft set previewed on white in the middle, the recipe panel on the right."></figure>
+    <ol class="legend"></ol>
+  </div>
+</section>
+
+<section id="queue">
+  <h2>Folder list</h2>
+  <p class="sub">The queue. Folders are processed top to bottom, so the order here is the export order.</p>
+  <div class="split narrow-img">
+    <figure class="shot"><img src="shots/folder-list.jpg" width="400" height="908" alt="Folder list with three set folders; the first is selected and checked for export."></figure>
+    <div>
+      <h3 style="margin-top:0">Selecting and ordering</h3>
+      <ul class="tight">
+        <li><b>Click</b> a folder to preview it. Recipe edits apply to every selected folder.</li>
+        <li><b>Shift-click</b> selects a range, <b>⌘-click</b> adds or removes one.</li>
+        <li><b>The checkbox</b> on the thumbnail includes the folder in the next export. The counter at the top (<span class="mono">1/3</span>) shows how many are checked; the box next to it checks all or none.</li>
+        <li><b>Drag</b> a folder to reorder it. Drop it on the <span class="mono">↓</span> bar at the bottom to send it to the end.</li>
+        <li><b>Right-click</b> a folder for <span class="ui">Mark completed</span> and <span class="ui">Remove folder</span>. The <span class="ui">⋯</span> menu above the list marks every selected folder completed at once.</li>
+      </ul>
+      <h3>Folder status icons</h3>
+      <ul class="icons">
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/></svg></span><span><b>Spinner</b>: exporting now. A thin bar under the thumbnail shows its progress.</span></li>
+        <li><span class="ico" style="color:var(--ok)"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-6.5" stroke="var(--bg)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Green check</b>: export finished.</span></li>
+        <li><span class="ico" style="color:var(--warn)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18v.01" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/></svg></span><span><b>Yellow triangle</b>: the export failed. It is retried up to three times; <span class="ui">Retry failed</span> in the toolbar tries again.</span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6" stroke-linecap="round"/></svg></span><span><b>Pause circle</b>: paused part-way. Finished photos are kept.</span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><rect x="9" y="9" width="6" height="6" rx="1" fill="currentColor"/></svg></span><span><b>Stop circle</b>: stopped; its unfinished export was discarded.</span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="2.5 3"><circle cx="12" cy="12" r="9"/></svg></span><span><b>Dotted circle</b>: waiting its turn in this run.</span></li>
+      </ul>
+      <h3>Completed folders</h3>
+      <p>Finished folders can be moved out of the queue with <span class="ui">Mark completed</span>. A <span class="ui">Completed N</span> button then appears above the list; it opens a sheet where each folder has <span class="ui">Open images</span> and <span class="ui">Restore to queue</span>.</p>
+    </div>
+  </div>
+  <h3>Layout</h3>
+  <p>The list can sit on the left, along the bottom, or be hidden, which helps on a laptop screen. Use the sidebar button at the top right of the window (<span class="ui">Folders on the left</span>, <span class="ui">Folders below</span>, <span class="ui">Hide folders</span>), or press <kbd>⌃⌘S</kbd> to show or hide it.</p>
+</section>
+
+<section id="photos">
+  <h2>Photo view</h2>
+  <p class="sub">Opened with <span class="ui">All photos</span>. Here every angle is listed, and edits apply only to the photos you check.</p>
+  <div class="annot" data-annot="photos">
+    <figure class="shot"><img src="shots/photos-edited.jpg" width="1415" height="840" alt="Photo view: list of 36 angles on the left, edited preview in the middle, recipe panel titled 36 photos on the right with a yellow export card."></figure>
+    <ol class="legend"></ol>
+  </div>
+
+  <h3>Edited, Original and Compare</h3>
+  <p><span class="ui">Edited</span> shows the result, <span class="ui">Original</span> the photo as shot, and <span class="ui">Compare</span> puts both side by side. Use Compare whenever you turn on a recovery option, to check that nothing from the floor came back with the part.</p>
+  <div class="swapper" data-swap>
+    <div class="switch" role="group" aria-label="Preview mode">
+      <button type="button" aria-pressed="true" data-src="shots/photos-edited.jpg" data-alt="Edited preview of set 21141-1 on white.">Edited</button>
+      <button type="button" aria-pressed="false" data-src="shots/compare.jpg" data-alt="Compare mode: the original turntable photo on the left, the edited cutout on the right.">Compare</button>
+    </div>
+    <figure class="shot"><img src="shots/photos-edited.jpg" width="1415" height="840" alt="Edited preview of set 21141-1 on white."></figure>
+  </div>
+
+  <h3>Centred and Fixed crops</h3>
+  <p><span class="ui">Centred</span> puts every angle in the middle of the canvas at one shared scale. <span class="ui">Fixed</span> uses one crop for the whole rotation and keeps the model where it stood on the turntable, so a spin animation doesn't jump. The switch only appears when <span class="ui">Output → Framing</span> is set to <span class="ui">Both</span>. Here is the same 90° photo both ways:</p>
+  <div class="swapper" data-swap>
+    <div class="switch" role="group" aria-label="Crop">
+      <button type="button" aria-pressed="true" data-src="shots/crop-centred.jpg" data-alt="Centred crop of the 90 degree photo: model in the middle of the canvas.">Centred</button>
+      <button type="button" aria-pressed="false" data-src="shots/crop-fixed.jpg" data-alt="Fixed crop of the 90 degree photo: model sits right of centre, where it stood on the turntable.">Fixed</button>
+    </div>
+    <figure class="shot"><img src="shots/crop-centred.jpg" width="1415" height="840" alt="Centred crop of the 90 degree photo: model in the middle of the canvas."></figure>
+  </div>
+
+  <h3>Photo list icons</h3>
+  <ul class="icons">
+    <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5v-9Z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg></span><span><b>Box</b>: a packaging photo. Right-click a row and choose <span class="ui">Mark as packaging photo</span>. Packaging photos get their own settings.</span></li>
+    <li><span class="ico" style="color:var(--warn)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18v.01" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/></svg></span><span><b>Yellow triangle</b>: flagged for review. Check it against Original before publishing.</span></li>
+    <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg></span><span><b>Check under the preview</b>: you are looking at the exported image.</span></li>
+    <li><span class="ico" style="color:var(--accent)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.8 5.2 5.2 1.8-5.2 1.8L12 16.5l-1.8-5.2L5 9.5l5.2-1.8L12 2.5ZM18.5 15l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9.9-2.6Z"/></svg></span><span><b>Sparkles under the preview</b>: a live preview of the current recipe, not yet exported.</span></li>
+  </ul>
+  <h3>Review warnings</h3>
+  <p>After a cutout the app checks its own work. When something looks off, a dark pill with a yellow triangle appears at the bottom-left of the preview, starting with <span class="ui">Review:</span>. Possible notes:</p>
+  <ul class="tight">
+    <li><span class="mono">Check product at processing boundary</span>: the model touches the edge of the processed area.</li>
+    <li><span class="mono">Check separate pieces against the original</span>: loose pieces may be missing.</li>
+    <li><span class="mono">Check recovered white parts against the original</span>: faint outlines may be incomplete.</li>
+    <li><span class="mono">Check recovered dark parts near the floor against the original</span></li>
+  </ul>
+  <p>The flags don't catch every defect. Always look over fine railings, transparent bricks and pale pieces yourself.</p>
+</section>
+
+<section id="recipe">
+  <h2>Recipe panel</h2>
+  <p class="sub">Everything that shapes the output. Sliders apply when you release them. Double-click a slider's name to reset just that slider. Hover any control in the app for the same explanation as below.</p>
+  <div class="split narrow-img">
+    <figure class="shot"><img src="shots/panel.jpg" width="613" height="1568" alt="Recipe panel with Tone, Detail, Shadow, Output and Cutout sections expanded."></figure>
+    <div>
+      <h3 style="margin-top:0">Which photos an edit changes</h3>
+      <p>The panel title tells you what you are editing:</p>
+      <ul class="tight">
+        <li><b>Shared recipe</b>: no folder selected. Changes apply to every folder that uses the shared recipe.</li>
+        <li><b>Folder recipe</b>: one folder selected. Each edit applies that control to every photo in it; other per-photo suggestions stay as they are.</li>
+        <li><b>N folders</b>: several folders selected; the edit goes to all of them.</li>
+        <li><b>N photos</b>: in the photo view. Edits apply to the checked photos only. With every photo checked, they also update the folder's settings.</li>
+        <li><b>Packaging photo</b>: packaging settings override the folder recipe for this photo.</li>
+      </ul>
+      <p>The folder header shows the source too: <span class="mono">Shared recipe</span>, <span class="mono">Folder recipe</span>, or <span class="mono">Saved recipe</span>. Saved means an export of this folder already started with these settings, so the panel is locked to keep the run consistent. <span class="ui">⋯ → Use shared recipe</span> drops a folder's own settings.</p>
+      <h3>Header buttons</h3>
+      <ul class="tight">
+        <li><b>Wand</b>: suggest settings from your processing history for the selection.</li>
+        <li><b>Circular arrow</b>: reset every setting to its default.</li>
+        <li><b>⋯</b>: <span class="ui">Learn settings for new photos</span> (automatic suggestions on or off); in the photo view also <span class="ui">Packaging photo</span>, <span class="ui">Use packaging default</span> and <span class="ui">Save as packaging default</span>.</li>
+        <li><b>Sparkles</b> next to the title: the values came from your history (or your last settings for this photo).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="filter">
+    <label for="ctl-filter" class="ui">Find a control</label>
+    <input id="ctl-filter" type="search" placeholder="e.g. shadow, white, fill" autocomplete="off">
+    <small id="ctl-count" aria-live="polite"></small>
+  </div>
+  <div class="tablewrap">
+    <table id="controls">
+      <thead><tr><th style="width:22%">Control</th><th style="width:18%">Range · default</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr class="g"><td class="group" colspan="3">Tone</td></tr>
+        <tr><td><b>Exposure</b></td><td class="mono">−0.5 to +1.5 · +0.65</td><td>Brightness in stops. Highlights are compressed to protect pale bricks.</td></tr>
+        <tr><td><b>Contrast</b></td><td class="mono">−100 to +100 · 0</td><td>Gentle contrast curve.</td></tr>
+        <tr><td><b>Whites</b></td><td class="mono">−100 to +100 · 0</td><td>Below zero brings overexposed white bricks down while mid-tones and shadows stay put. Above zero lifts only the brightest tones.</td></tr>
+        <tr><td><b>Warmth</b></td><td class="mono">−100 to +100 · +25</td><td>Colour temperature on top of the automatic neutral correction.</td></tr>
+        <tr class="g"><td class="group" colspan="3">Detail</td></tr>
+        <tr><td><b>Sharpness</b></td><td class="mono">0–200% · 75%</td><td>Output sharpening. It can't restore detail missing from a soft source photo.</td></tr>
+        <tr><td><b>Noise</b></td><td class="mono">0–200% · 0%</td><td>Edge-preserving noise reduction.</td></tr>
+        <tr class="g"><td class="group" colspan="3">Shadow</td></tr>
+        <tr><td><b>Strength</b></td><td class="mono">Off–200% · 200%</td><td>Strength of the contact shadow recovered from the photographed floor. 0 turns it off.</td></tr>
+        <tr><td><b>Enhanced shadows</b></td><td class="mono">checkbox</td><td>Recovers wider floor shadows. Off uses the original shadow method.</td></tr>
+        <tr><td><b>Remove floor patches</b></td><td class="mono">checkbox · off</td><td>Rechecks grey floor caught in the cutout, including solid patches beside wheels. Turn on if a hard floor patch is stuck to the model or floating under it, then inspect pale or grey parts near the base, which it can remove too.</td></tr>
+        <tr class="g"><td class="group" colspan="3">Output</td></tr>
+        <tr><td><b>Canvas</b></td><td class="mono">Square 1:1 · Landscape 3:2 · Portrait 4:5 · Wide 16:9</td><td>Shape of the exported image.</td></tr>
+        <tr><td><b>Long edge</b></td><td class="mono">1600 · 2400 · 3200 px</td><td>Size of the longest side of the exported image.</td></tr>
+        <tr><td><b>Framing</b></td><td class="mono">Centred · Fixed · Both</td><td>Centred keeps every view centred at one shared scale. Fixed keeps one crop and scale for the whole rotation and preserves original positions. Both exports the two. Only the chosen framing is written.</td></tr>
+        <tr><td><b>Fill</b></td><td class="mono">60–92% · 84%</td><td>How much of the canvas the product fills.</td></tr>
+        <tr><td><b>Fill each view separately</b></td><td class="mono">checkbox · off</td><td>Every centred view fills the chosen amount, so the product's size changes between angles. Off keeps one scale, set by the widest angle. Centred crops only.</td></tr>
+        <tr class="g"><td class="group" colspan="3">Cutout</td></tr>
+        <tr><td><b>Engine</b></td><td class="mono">Metal (GPU) · CPU (ONNX)</td><td>Metal runs the BiRefNet model on the Apple Silicon GPU. CPU is the original rembg path; use it if Metal ever disagrees on a cutout. Masks are cached separately per engine.</td></tr>
+        <tr><td><b>Detection</b></td><td class="mono">Efficient · Detailed</td><td>Efficient uses a fast guide and one model pass. Detailed uses two passes and is slower.</td></tr>
+        <tr><td><b>Find small loose pieces</b></td><td class="mono">checkbox · off</td><td>For sets with studs, bones or tiles loose on the floor. Slower, and masks are rebuilt. Without it, pale pieces lying apart from the model can be missed.</td></tr>
+        <tr><td><b>Recover flat parts and tools</b></td><td class="mono">checkbox · off</td><td>Extra close-up detection for missing ramps, grey plates and thin dark tools. Slower on first use; may keep more floor near dark pieces.</td></tr>
+        <tr><td><b>Recover white parts</b></td><td class="mono">checkbox · off</td><td>For photos where a white wing or plate merged into the booth. Check against Original. Applies to checked photos.</td></tr>
+        <tr><td><b>Recover dark parts near the floor</b></td><td class="mono">checkbox · off</td><td>For black bumpers or plates cut away as shadow. Only long strips directly under the model are restored. Check against Original. Applies to checked photos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">Defaults are what the reset button restores. New folders usually open with suggested values instead (see <a href="#suggest">Suggested settings</a>), which is why the screenshots show different numbers.</p>
+</section>
+
+<section id="export">
+  <h2>Exporting</h2>
+  <p class="sub">The bottom of the recipe panel holds the destination and the button that starts the run.</p>
+  <div class="split">
+    <div>
+      <h3 style="margin-top:0">Destination card</h3>
+      <p>On the Folders screen the card reads <span class="ui">Export to</span> and shows the destination folder. Click it, or <span class="ui">Change</span>, to pick another. Right-click for <span class="ui">Show in Finder</span>.</p>
+      <p>In the photo view it reads <span class="ui">Updates export</span>: <span class="ui">Update N photos</span> rewrites just the checked photos inside that folder's earlier export. Export the folder from the Folders screen first. Until then the card shows <span class="ui">Choose a folder</span>, and updated photos go to a new <code>Shoot-…</code> folder instead.</p>
+      <p><b>Yellow card</b>: the destination isn't reachable, usually because the external drive is unplugged. Connect it and the card turns normal again.</p>
+    </div>
+    <figure class="shot" style="background:var(--app);padding:0"><img src="shots/export-card-missing.jpg" width="634" height="275" alt="Yellow export card reading Choose a folder, folder not connected, above a blue Update 36 photos button."></figure>
+  </div>
+
+  <h3>The Process button</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th style="width:34%">Label</th><th>When you see it</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">Process N folders</td><td>Checked folders that haven't been exported yet.</td></tr>
+        <tr><td class="mono">Re-export N folders</td><td>Every checked folder is already complete, failed or stopped.</td></tr>
+        <tr><td class="mono">Resume · N folders left</td><td>A paused run is waiting.</td></tr>
+        <tr><td class="mono">Process / Update N photos</td><td>In the photo view, for the checked photos.</td></tr>
+        <tr><td class="mono">Select folders to process</td><td>Nothing is checked, so the button is disabled.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>While it runs</h3>
+  <p>A footer appears under the preview. A thin bar on top shows progress for the whole run. Below it:</p>
+  <ul class="tight">
+    <li>The folder being processed and its position in the queue.</li>
+    <li>One cell per photo: written photos are blue, and the current one fills as it renders.</li>
+    <li><span class="mono">Photo x/y · time</span>, how long the previous photo took (<span class="mono">last N s</span>), and the current step.</li>
+    <li><span class="mono">done/total photos · %</span> and elapsed time for the run.</li>
+  </ul>
+  <p>The panel is locked while a run is going, so settings can't change half-way.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th style="width:24%">Button</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td class="ui">Pause</td><td>Stops after the current photo and keeps everything finished. The footer shows <span class="mono">Paused · N folders left</span> with <span class="ui">Resume</span>, which continues with the paused folder and the ones after it.</td></tr>
+        <tr><td class="ui">Stop</td><td>Asks <span class="mono">Stop this export?</span> first. <span class="ui">Stop and discard export</span> moves the unfinished folder's export to the Trash; <span class="ui">Keep processing</span> carries on.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:14px">When the run ends the footer reads <span class="mono">Finished · N folders · N photos</span>, with a failed count if any folder failed. For long runs, keep the Mac plugged in with the lid open. Brick Studio prevents idle sleep, but closing the lid can still suspend it.</p>
+
+  <h3>What gets written</h3>
+  <p>Each product goes to its own folder inside the destination. File names match the source photos.</p>
+<pre>&lt;destination&gt;/&lt;folder name&gt;-&lt;id&gt;/
+  centered/jpeg/           white background, one scale for the whole rotation
+  centered/transparent/    matching PNGs with transparency
+  fixed-frame/jpeg/        one crop for the whole rotation, original positions kept
+  fixed-frame/transparent/</pre>
+  <p>Only the framing chosen under <span class="ui">Output → Framing</span> is written. Use <span class="ui">Open exports in Finder</span> (top-right of the window) or <span class="ui">⋯ → Open images</span> on a folder to jump to the results.</p>
+</section>
+
+<section id="suggest">
+  <h2>Suggested settings</h2>
+  <p>New folders open with tone and detail settings suggested by comparing their photos with earlier work. Brick Studio ships with a starting history of about 12,600 settings from roughly 300 products. After that it learns only from your own corrections, saved when you export.</p>
+  <ul class="tight">
+    <li>Press the <b>wand</b> in the panel header to re-suggest settings for the selected folders or checked photos.</li>
+    <li>Turn automatic suggestions off with <span class="ui">⋯ → Learn settings for new photos</span>.</li>
+    <li>To start with no history, quit the app and delete <code>work/learning/history.sqlite3</code>.</li>
+  </ul>
+</section>
+
+<section id="keys">
+  <h2>Shortcuts</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th style="width:34%">Keys or gesture</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>⌘O</kbd></td><td>Add folders</td></tr>
+        <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Previous or next photo</td></tr>
+        <tr><td><kbd>⌃⌘S</kbd></td><td>Show or hide the folder list</td></tr>
+        <tr><td>Hover the photo</td><td>Magnifier. Pick its zoom from the zoom button at the top-right of the preview, or scroll over the photo.</td></tr>
+        <tr><td>Double-click a slider name</td><td>Reset that slider</td></tr>
+        <tr><td>Shift-click</td><td>Select a range of folders, or check a range of photos</td></tr>
+        <tr><td>⌘-click</td><td>Add or remove one folder or photo</td></tr>
+        <tr><td>Drag a folder</td><td>Reorder the queue</td></tr>
+        <tr><td>Right-click a folder or photo</td><td>Mark completed, Remove, Mark as packaging photo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="trouble">
+  <h2>Troubleshooting</h2>
+  <p class="sub">Common problems and where to look.</p>
+  <details><summary>The preview stays on "Preparing"</summary><div><p>A new folder's first preview has to find the subject once, which takes longer, and the very first cutout also downloads the model. If it never finishes, open <code>work/preview-worker.log</code>. If a preview fails, the pill at the bottom-left has a <span class="ui">Retry</span> button.</p></div></details>
+  <details><summary>A folder fails during export</summary><div><p>Failed folders are retried up to three times automatically. Press <span class="ui">Retry failed</span> in the toolbar to try again. The details are in <code>work/queue/worker.log</code> and the folder's <code>processing.log</code> under <code>work/shoots/</code>.</p></div></details>
+  <details><summary>The export card is yellow</summary><div><p>The destination drive isn't connected. Plug it in, or click the card to choose another folder.</p></div></details>
+  <details><summary>Photos added to a folder don't show up</summary><div><p>Press the refresh button next to <span class="ui">Add folders</span>. It picks up photos added to or removed from queued folders and keeps their recipes. For one folder, use <span class="ui">⋯ → Refresh photos</span>.</p></div></details>
+  <details><summary>Part of the model is missing, or floor stayed in the cutout</summary><div>
+    <ul class="tight">
+      <li>Loose studs or tiles missing: <span class="ui">Find small loose pieces</span>.</li>
+      <li>Ramps, grey plates, thin dark tools missing: <span class="ui">Recover flat parts and tools</span>.</li>
+      <li>A white wing merged into the booth: <span class="ui">Recover white parts</span>.</li>
+      <li>A black bumper cut away as shadow: <span class="ui">Recover dark parts near the floor</span>.</li>
+      <li>A grey floor patch stuck to the model: <span class="ui">Remove floor patches</span>, then check pale parts near the base.</li>
+      <li>Still wrong: try <span class="ui">Detection → Detailed</span>, or the CPU engine.</li>
+    </ul>
+    <p>Check each change in <span class="ui">Compare</span> before exporting.</p></div></details>
+  <details><summary>Known limitations</summary><div>
+    <ul class="tight">
+      <li>Built for a neutral white photo booth. Other backdrops need a different colour calibration.</li>
+      <li>Fine railings, transparent bricks and pale pieces need a manual look. Review flags don't catch every defect.</li>
+      <li>Colours are corrected, not calibrated: there's no grey card or colour chart in the pipeline.</li>
+      <li>Sharpening can't restore detail missing from a soft source photo.</li>
+    </ul></div></details>
+</section>
+
+<section id="files">
+  <h2>Where files live</h2>
+  <p class="sub">All paths are inside the Brick Studio folder unless they start with <code>~</code>. Deleting <code>work/</code> resets the queue, caches and learning history but leaves exports untouched.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th style="width:40%">Location</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td><code>work/masks/</code></td><td>Reusable cutouts, so re-exports skip the slow detection step</td></tr>
+        <tr><td><code>work/preview-cache/</code></td><td>Rendered previews, capped at 2 GB</td></tr>
+        <tr><td><code>work/queue/</code></td><td>Queue state and the worker log</td></tr>
+        <tr><td><code>work/shoots/</code></td><td>Per-export records: manifest, log, contact sheet</td></tr>
+        <tr><td><code>work/learning/</code></td><td>Learning history and current suggestions</td></tr>
+        <tr><td><code>work/hf-cache/</code></td><td>Metal engine model weights (about 430 MB)</td></tr>
+        <tr><td><code>~/.rembg/models/</code></td><td>CPU engine model weights (about 930 MB, only if the CPU engine is used)</td></tr>
+        <tr><td><code>~/Library/Application Support/Brick Studio/</code></td><td>Remembered folder settings and packaging settings</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>Brick Studio may be used and modified, including for your own business, but not sold, rented, sublicensed or redistributed. Screenshots taken from version 0.13.2. Source and setup files: <a href="https://github.com/lukasvale/brick-studio">github.com/lukasvale/brick-studio</a>.</footer>
+</main>
+</div>
+
+<script>
+(() => {
+  const W = 1415, H = 840;
+  const spots = {
+    folders: [
+      [51, 36, "Add folders", "Add product folders, or drag them onto the window.", "Shortcut ⌘O. A parent folder containing product subfolders adds each one."],
+      [108, 36, "Refresh", "Picks up photos added to or removed from queued folders.", "Recipes are kept."],
+      [25, 64, "Selection counter", "Folders checked for export, out of all in the queue.", "The checkbox beside it checks all or none. The ⋯ menu marks the selected folders completed."],
+      [68, 115, "Folder tile", "Click to preview. The checkbox includes it in the export.", "Shift-click selects a range, ⌘-click adds or removes one, drag to reorder. Right-click for Mark completed and Remove folder."],
+      [228, 70, "Folder header", "Folder name, photo count and which recipe it uses.", "Shared recipe, Folder recipe, or Saved recipe (locked because an export already started)."],
+      [1028, 70, "Crop preview", "Switch the preview between Centred and Fixed framing.", "Shown when Output → Framing is set to Both."],
+      [1122, 70, "All photos", "Opens the photo view to check single angles and edit them separately.", ""],
+      [1172, 70, "Folder menu", "Refresh photos, Use shared recipe, Open images, Mark completed, Remove folder.", "With several folders selected, each action applies to all of them."],
+      [1153, 107, "Magnifier zoom", "Hover the photo for a loupe; pick its zoom level here.", "Scrolling over the photo changes the zoom too."],
+      [166, 792, "Preview notes", "Notes about this folder's preview.", "Review warnings appear here as a pill with a yellow triangle, and failed previews get a Retry button."],
+      [600, 821, "Angle bar", "One tick per photo. Drag, or step with ‹ › and the ← → keys.", "The counter shows the photo number, e.g. 1/36."],
+      [1125, 821, "Quick angles", "Jump straight to 0°, 90°, 180° or 270°.", ""],
+      [1300, 250, "Recipe panel", "Tone, Detail, Shadow, Output and Cutout for the selected folders.", "See the Recipe panel section below for every control."],
+      [1303, 779, "Export to", "Where exports are saved. Click to change it.", "Turns yellow when the destination drive is not connected."],
+      [1303, 816, "Process", "Starts the export of every checked folder, in queue order.", "Reads Resume after a pause and Re-export for folders already done."],
+      [1368, 36, "Folder list layout", "Folders on the left, below, or hidden.", "⌃⌘S shows or hides the list."],
+      [1393, 36, "Open exports", "Opens the export folder in Finder.", ""]
+    ],
+    photos: [
+      [38, 36, "Back to Folders", "Returns to the queue. The title shows set and angle.", ""],
+      [30, 64, "Check all", "36/36 photos are checked. Edits and exports apply to checked photos.", "Shift-click checks a range from the last clicked photo; ⌘-click checks or unchecks one."],
+      [68, 112, "Photo row", "One row per angle. Click to preview; the checkbox includes it.", "A box icon marks a packaging photo, a yellow triangle a photo to review. Right-click for Mark as packaging photo."],
+      [1170, 35, "Crop", "Preview the Centred or Fixed crop.", ""],
+      [1303, 35, "Preview mode", "Edited, Original, or Compare side by side.", "Use Compare after turning on a recovery option."],
+      [1227, 68, "Editing target", "Edits apply to the checked photos only.", "With all photos checked, edits also update the folder's settings. Unchecked photos keep theirs."],
+      [172, 814, "Preview state", "Sparkles mean a live preview of the recipe; a check means the exported image.", ""],
+      [1303, 779, "Updates export", "This folder's earlier export, which gets rewritten.", "Yellow with Choose a folder means the folder hasn't been exported yet."],
+      [1303, 816, "Update photos", "Re-renders only the checked photos into the existing export.", ""]
+    ]
+  };
+
+  document.querySelectorAll("[data-annot]").forEach(box => {
+    const list = spots[box.dataset.annot], fig = box.querySelector(".shot"), legend = box.querySelector(".legend");
+    const pins = [], items = [];
+    const select = (i, scroll) => {
+      pins.forEach((p, j) => p.classList.toggle("on", j === i));
+      items.forEach((b, j) => { b.classList.toggle("on", j === i); b.setAttribute("aria-expanded", j === i); });
+      if (scroll && items[i] && window.matchMedia("(max-width:1100px)").matches)
+        items[i].scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    };
+    list.forEach(([x, y, title, text, more], i) => {
+      const pin = document.createElement("button");
+      pin.type = "button"; pin.className = "pin"; pin.textContent = i + 1;
+      pin.style.left = (x / W * 100) + "%"; pin.style.top = (y / H * 100) + "%";
+      pin.setAttribute("aria-label", (i + 1) + ": " + title);
+      pin.addEventListener("click", () => select(i, true));
+      pin.addEventListener("mouseenter", () => select(i, false));
+      fig.appendChild(pin); pins.push(pin);
+      const li = document.createElement("li"), b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = `<span class="n">${i + 1}</span><span><b></b><span></span><span class="more"></span></span>`;
+      b.querySelector("b").textContent = title;
+      b.querySelector("b + span").textContent = text;
+      const m = b.querySelector(".more"); if (more) m.textContent = more; else m.remove();
+      b.addEventListener("click", () => select(i, false));
+      b.addEventListener("mouseenter", () => select(i, false));
+      b.addEventListener("focus", () => select(i, false));
+      li.appendChild(b); legend.appendChild(li); items.push(b);
+    });
+    select(0, false);
+  });
+
+  document.querySelectorAll("[data-swap]").forEach(box => {
+    const img = box.querySelector("img"), btns = box.querySelectorAll(".switch button");
+    btns.forEach(b => {
+      new Image().src = b.dataset.src;
+      b.addEventListener("click", () => {
+        btns.forEach(o => o.setAttribute("aria-pressed", o === b));
+        img.src = b.dataset.src; img.alt = b.dataset.alt;
+      });
+    });
+  });
+
+  const input = document.getElementById("ctl-filter"), count = document.getElementById("ctl-count");
+  const rows = [...document.querySelectorAll("#controls tbody tr")];
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase(); let n = 0, group = null, groupHas = false;
+    const flush = () => { if (group) group.hidden = q && !groupHas; };
+    rows.forEach(r => {
+      if (r.classList.contains("g")) { flush(); group = r; groupHas = false; return; }
+      const hit = !q || r.textContent.toLowerCase().includes(q);
+      r.hidden = !hit; if (hit) { n++; groupHas = true; }
+    });
+    flush();
+    count.textContent = q ? (n ? `${n} control${n === 1 ? "" : "s"}` : "No control matches. Try a word from its description.") : "";
+  });
+
+  const links = [...document.querySelectorAll(".toc a")];
+  const secs = links.map(a => document.querySelector(a.getAttribute("href")));
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => {
+        const on = a.getAttribute("href") === "#" + e.target.id;
+        a.classList.toggle("on", on);
+        if (on && matchMedia("(max-width:900px)").matches) {
+          const bar = a.closest("ol");
+          bar.scrollLeft = a.offsetLeft - (bar.clientWidth - a.offsetWidth) / 2;
+        }
+      });
+    });
+  }, { rootMargin: "-30% 0px -65% 0px" });
+  secs.forEach(s => s && io.observe(s));
+})();
+</script>
+</body>
+</html>
